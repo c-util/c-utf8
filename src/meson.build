@@ -55,3 +55,10 @@ test('API Symbol Visibility', test_api)
 
 test_basic = executable('test-basic', ['test-basic.c'], link_with: libcutf8_private)
 test('Basic API Behavior', test_basic)
+
+#
+# target: bench-*
+#
+
+bench_ascii = executable('bench-ascii', ['bench-ascii.c', 'trivial-utf8.c'], link_with: libcutf8_shared)
+benchmark('ASCII validation', bench_ascii)
