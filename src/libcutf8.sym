@@ -1,0 +1,7 @@
+LIBCUTF8_1 {
+global:
+        c_utf8_verify_ascii;
+        c_utf8_verify;
+local:
+       *;
+};
