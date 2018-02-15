@@ -24,8 +24,9 @@ GITWEB:
         https://github.com/c-util/c-utf8
 
 LICENSE:
-        Apache Software License 2.0 (LICENSE)
-        See COPYING for details.
+        Apache Software License 2.0
+        Lesser General Public License 2.1+
+        See AUTHORS for details.
 
 REQUIREMENTS:
         The requirements for c-utf8 are:
