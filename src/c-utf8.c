@@ -30,10 +30,13 @@
  * point to the first non-ASCII character or the first NULL of the
  * string, and the remaining number of bytes of the string,
  * respectively.
+ *
+ * If @lenp is NULL the string is scanned until the first invalid
+ * byte, without any upper bound on its length.
  */
 _public_ void c_utf8_verify_ascii(const char **strp, size_t *lenp) {
         unsigned char *str = (unsigned char *)*strp;
-        size_t len = *lenp;
+        size_t len = lenp ? *lenp : (size_t)-1;
 
         while (len > 0 && *str < 128) {
                 if ((void*)ALIGN_TO((unsigned long)str, sizeof(size_t)) == str) {
@@ -74,7 +77,8 @@ _public_ void c_utf8_verify_ascii(const char **strp, size_t *lenp) {
 
 out:
         *strp = (char *)str;
-        *lenp = len;
+        if (lenp)
+                *lenp = len;
 }
 
 #define C_UTF8_CHAR_IS_TAIL(_x)         (((_x) & 0xC0) == 0x80)
@@ -82,17 +86,20 @@ out:
 /**
  * c_utf8_verify() - verify that a string is UTF-8 encoded
  * @strp:               pointer to string to verify
- * @lenp:               pointer to length of string
+ * @lenp:               pointer to length of string, or NULL
  *
  * Up to the first @lenp bytes of the string pointed to by @strp is
  * verified to be UTF-8 encoded, and @strp and @lenp are updated to
  * point to the first non-UTF-8 character or the first NULL of the
  * string, and the remaining number of bytes of the string,
  * respectively.
+ *
+ * If @lenp is NULL the string is scanned until the first invalid
+ * byte, without any upper bound on its length.
  */
 _public_ void c_utf8_verify(const char **strp, size_t *lenp) {
         unsigned char *str = (unsigned char *)*strp;
-        size_t len = *lenp;
+        size_t len = lenp ? *lenp : (size_t)-1;
 
         /* See Unicode 10.0.0, Chapter 3, Section D92 */
 
@@ -214,5 +221,6 @@ _public_ void c_utf8_verify(const char **strp, size_t *lenp) {
 
 out:
         *strp = (char *)str;
-        *lenp = len;
+        if (lenp)
+                *lenp = len;
 }
