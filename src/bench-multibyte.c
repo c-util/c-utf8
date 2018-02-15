@@ -27,7 +27,7 @@ static void test_trivial_utf8(const char *string, size_t n_string, size_t n_byte
 
         ts = test_get_time();
         res = trivial_utf8_is_valid(string);
-        fprintf(stderr, "UTF-8 verify string of %zu-byte characters (trivial): %lu MB/s\n", n_bytes, n_string * 1000 * 1000 * 1000 / 1024 / 1024 / (test_get_time() - ts));
+        fprintf(stderr, "UTF-8 verify string of %zu-byte characters (trivial): %lu Mchar/s\n", n_bytes, n_string / n_bytes * 1000 * 1000 * 1000 / 1024 / 1024 / (test_get_time() - ts));
         assert(res == string);
 }
 
@@ -37,22 +37,8 @@ static void test_utf8(const char *string, size_t n_string, size_t n_bytes) {
 
         ts = test_get_time();
         c_utf8_verify(&string, &len);
-        fprintf(stderr, "UTF-8 verify string of %zu-byte characters: %lu MB/s\n", n_bytes, n_string * 1000 * 1000 * 1000 / 1024 / 1024 / (test_get_time() - ts));
-        if (len >= n_bytes) {
-                if (n_bytes == 4)
-                        fprintf(stderr, "consumed: %zu bytes, next: %#x %#x %#x %#x\n", n_string - len, (uint8_t)string[0], (uint8_t)string[1], (uint8_t)string[2], (uint8_t)string[3]);
-        }
+        fprintf(stderr, "UTF-8 verify string of %zu-byte characters: %lu Mchar/s\n", n_bytes, n_string / n_bytes * 1000 * 1000 * 1000 / 1024 / 1024 / (test_get_time() - ts));
         assert(len == 1);
-}
-
-static void test_strlen(const char *string, size_t n_string, size_t n_bytes) {
-        uint64_t ts;
-        size_t len;
-
-        ts = test_get_time();
-        len = strnlen(string, n_string);
-        fprintf(stderr, "strlen() of string of %zu-byte characters: %lu MB/s\n", n_bytes, n_string * 1000 * 1000 * 1000 / 1024 / 1024 / (test_get_time() - ts));
-        assert(len == n_string - 1);
 }
 
 #define TEST_STRING_SIZE (500ULL * 1024ULL * 1024ULL)
@@ -102,7 +88,6 @@ static void test_multibytes(size_t n_bytes) {
 
         test_trivial_utf8(string, ((TEST_STRING_SIZE - 1) / n_bytes) * n_bytes + 1, n_bytes);
         test_utf8(string, ((TEST_STRING_SIZE - 1) / n_bytes) * n_bytes + 1, n_bytes);
-        test_strlen(string, ((TEST_STRING_SIZE - 1) / n_bytes) * n_bytes + 1, n_bytes);
 
         free(string);
 }
