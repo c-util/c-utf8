@@ -4,6 +4,7 @@
 
 #undef NDEBUG
 #include <assert.h>
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,7 +28,7 @@ static void test_trivial_utf8(const char *string, size_t n_string) {
 
         ts = test_get_time();
         res = trivial_utf8_is_valid(string);
-        fprintf(stderr, "UTF-8 verify ASCII string (trivial): %lu MB/s\n", n_string * 1000 * 1000 * 1000 / 1024 / 1024 / (test_get_time() - ts));
+        fprintf(stderr, "UTF-8 verify ASCII string (trivial): %"PRIu64" MB/s\n", n_string * 1000 * 1000 * 1000 / 1024 / 1024 / (test_get_time() - ts));
         assert(res == string);
 }
 
@@ -37,7 +38,7 @@ static void test_utf8(const char *string, size_t n_string) {
 
         ts = test_get_time();
         c_utf8_verify(&string, &len);
-        fprintf(stderr, "UTF-8 verify ASCII string: %lu MB/s\n", n_string * 1000 * 1000 * 1000 / 1024 / 1024 / (test_get_time() - ts));
+        fprintf(stderr, "UTF-8 verify ASCII string: %"PRIu64" MB/s\n", n_string * 1000 * 1000 * 1000 / 1024 / 1024 / (test_get_time() - ts));
         assert(len == 1);
 }
 
@@ -47,7 +48,7 @@ static void test_strlen(const char *string, size_t n_string) {
 
         ts = test_get_time();
         len = strnlen(string, n_string);
-        fprintf(stderr, "strlen() of ASCII string: %lu MB/s\n", n_string * 1000 * 1000 * 1000 / 1024 / 1024 / (test_get_time() - ts));
+        fprintf(stderr, "strlen() of ASCII string: %"PRIu64" MB/s\n", n_string * 1000 * 1000 * 1000 / 1024 / 1024 / (test_get_time() - ts));
         assert(len == n_string - 1);
 }
 

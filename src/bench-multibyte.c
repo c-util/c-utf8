@@ -4,6 +4,7 @@
 
 #undef NDEBUG
 #include <assert.h>
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,7 +28,7 @@ static void test_trivial_utf8(const char *string, size_t n_string, size_t n_byte
 
         ts = test_get_time();
         res = trivial_utf8_is_valid(string);
-        fprintf(stderr, "UTF-8 verify string of %zu-byte characters (trivial): %lu Mchar/s\n", n_bytes, n_string / n_bytes * 1000 * 1000 * 1000 / 1024 / 1024 / (test_get_time() - ts));
+        fprintf(stderr, "UTF-8 verify string of %zu-byte characters (trivial): %"PRIu64" Mchar/s\n", n_bytes, n_string / n_bytes * 1000 * 1000 * 1000 / 1024 / 1024 / (test_get_time() - ts));
         assert(res == string);
 }
 
@@ -37,7 +38,7 @@ static void test_utf8(const char *string, size_t n_string, size_t n_bytes) {
 
         ts = test_get_time();
         c_utf8_verify(&string, &len);
-        fprintf(stderr, "UTF-8 verify string of %zu-byte characters: %lu Mchar/s\n", n_bytes, n_string / n_bytes * 1000 * 1000 * 1000 / 1024 / 1024 / (test_get_time() - ts));
+        fprintf(stderr, "UTF-8 verify string of %zu-byte characters: %"PRIu64" Mchar/s\n", n_bytes, n_string / n_bytes * 1000 * 1000 * 1000 / 1024 / 1024 / (test_get_time() - ts));
         assert(len == 1);
 }
 
