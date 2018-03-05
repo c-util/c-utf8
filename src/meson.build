@@ -60,8 +60,8 @@ test('Basic API Behavior', test_basic)
 # target: bench-*
 #
 
-bench_ascii = executable('bench-ascii', ['bench-ascii.c', 'trivial-utf8.c'], link_with: libcutf8_shared)
+bench_ascii = executable('bench-ascii', ['bench-ascii.c', 'trivial-utf8.c'], link_with: libcutf8_private)
 benchmark('ASCII validation', bench_ascii)
 
-bench_multibyte = executable('bench-multibyte', ['bench-multibyte.c', 'trivial-utf8.c'], link_with: libcutf8_shared)
+bench_multibyte = executable('bench-multibyte', ['bench-multibyte.c', 'trivial-utf8.c'], link_with: libcutf8_private)
 benchmark('Multi-byte validation', bench_multibyte)
