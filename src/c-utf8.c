@@ -20,6 +20,11 @@
 #define C_UTF8_ASCII_MASK ((size_t)UINT64_C(0x8080808080808080))
 #define C_UTF8_ASCII_SUB ((size_t)UINT64_C(0x0101010101010101))
 
+static inline int c_utf8_word_is_ascii(const size_t *word) {
+        /* True unless any byte is NULL or has the MSB set. */
+        return ((((*word - C_UTF8_ASCII_SUB) | *word) & C_UTF8_ASCII_MASK) == 0);
+}
+
 /**
  * c_utf8_verify_ascii() - verify that a string is ASCII encoded
  * @strp:               pointer to string to verify
@@ -41,16 +46,20 @@ _public_ void c_utf8_verify_ascii(const char **strp, size_t *lenp) {
         while (len > 0 && *str < 128) {
                 if ((void*)ALIGN_TO((unsigned long)str, sizeof(size_t)) == str) {
                         /*
-                         * If the string is aligned to a word boundary, scan one word
-                         * at a time for any NULL or non-ASCII characters.
+                         * If the string is aligned to a word boundary, scan two
+                         * words at a time for any NULL or non-ASCII characters.
+                         *
+                         * We do two words at a time to take advantage of the
+                         * compiler being able to use SIMD instructions where
+                         * available.
                          */
-                        while (len >= sizeof(size_t)) {
-                                /* break if any byte is NULL or has the MSB set */
-                                if ((((*(size_t*)str - C_UTF8_ASCII_SUB) | *(size_t*)str) & C_UTF8_ASCII_MASK) != 0)
+                        while (len >= 2 * sizeof(size_t)) {
+                                if (!c_utf8_word_is_ascii((size_t*)str) ||
+                                    !c_utf8_word_is_ascii(((size_t*)str) + 1))
                                         break;
 
-                                str += sizeof(size_t);
-                                len -= sizeof(size_t);
+                                str += 2 * sizeof(size_t);
+                                len -= 2 * sizeof(size_t);
                         }
 
 
