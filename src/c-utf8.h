@@ -1,7 +1,7 @@
 #pragma once
 
 /*
- * Standalone UTF-8 Implementation in Standard ISO-C11
+ * UTF-8 Handling in Standard ISO-C11
  *
  * This library provides an UTF-8 API, that is fully implemented in ISO-C11
  * and has no external dependencies.

@@ -42,7 +42,7 @@ if not meson.is_subproject()
                 version: meson.project_version(),
                 name: 'libcutf8',
                 filebase: 'libcutf8',
-                description: 'Standalone UTF-8 Implementation',
+                description: 'UTF-8 Handling in Standard ISO-C11',
         )
 endif
 
