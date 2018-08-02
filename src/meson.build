@@ -31,7 +31,7 @@ libcutf8_shared = shared_library(
 libcutf8_dep = declare_dependency(
         include_directories: include_directories('.'),
         link_with: libcutf8_private,
-        version: meson.project_version()
+        version: meson.project_version(),
 )
 
 if not meson.is_subproject()
@@ -42,7 +42,7 @@ if not meson.is_subproject()
                 version: meson.project_version(),
                 name: 'libcutf8',
                 filebase: 'libcutf8',
-                description: 'UTF-8 Handling in Standard ISO-C11',
+                description: project_description,
         )
 endif
 
@@ -53,15 +53,15 @@ endif
 test_api = executable('test-api', ['test-api.c'], link_with: libcutf8_shared)
 test('API Symbol Visibility', test_api)
 
-test_basic = executable('test-basic', ['test-basic.c'], link_with: libcutf8_private)
+test_basic = executable('test-basic', ['test-basic.c'], dependencies: libcutf8_dep)
 test('Basic API Behavior', test_basic)
 
 #
 # target: bench-*
 #
 
-bench_ascii = executable('bench-ascii', ['bench-ascii.c', 'trivial-utf8.c'], link_with: libcutf8_private)
+bench_ascii = executable('bench-ascii', ['bench-ascii.c', 'trivial-utf8.c'], dependencies: libcutf8_dep)
 benchmark('ASCII validation', bench_ascii)
 
-bench_multibyte = executable('bench-multibyte', ['bench-multibyte.c', 'trivial-utf8.c'], link_with: libcutf8_private)
+bench_multibyte = executable('bench-multibyte', ['bench-multibyte.c', 'trivial-utf8.c'], dependencies: libcutf8_dep)
 benchmark('Multi-byte validation', bench_multibyte)

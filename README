@@ -1,8 +1,8 @@
 c-utf8 - UTF-8 Handling in Standard ISO-C11
 
 ABOUT:
-        The c-utf8 project is a standalone implementation of UTF-8 in
-        Standard ISO-C11.
+        The c-utf8 project implements utility functions around handling UTF-8
+        in Standard ISO-C11.
 
         For API documentation, see the c-utf8.h header file, as well as the
         docbook comments for each function.
@@ -36,9 +36,9 @@ REQUIREMENTS:
             pkg-config >= 0.29
 
 INSTALL:
-        The meson build-system is used for c-utf8. Contact upstream
+        The meson build-system is used for this project. Contact upstream
         documentation for detailed help. In most situations the following
-        commands are sufficient to build and install c-utf8 from source:
+        commands are sufficient to build and install from source:
 
             $ mkdir build
             $ cd build
