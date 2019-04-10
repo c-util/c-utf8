@@ -8,13 +8,10 @@
  * critical.
  */
 
+#include <c-stdaux.h>
 #include <stddef.h>
 #include <stdint.h>
 #include "c-utf8.h"
-
-#define _public_ __attribute__((__visibility__("default")))
-#define _unlikely_(_x) (__builtin_expect(!!(_x), 0))
-#define ALIGN_TO(_val, _alignment) ((_val + (_alignment) - 1) & ~((_alignment) - 1))
 
 /* The following constants are truncated on 32-bit machines */
 #define C_UTF8_ASCII_MASK ((size_t)UINT64_C(0x8080808080808080))
@@ -39,12 +36,12 @@ static inline int c_utf8_word_is_ascii(const size_t *word) {
  * If @lenp is NULL the string is scanned until the first invalid
  * byte, without any upper bound on its length.
  */
-_public_ void c_utf8_verify_ascii(const char **strp, size_t *lenp) {
+_c_public_ void c_utf8_verify_ascii(const char **strp, size_t *lenp) {
         unsigned char *str = (unsigned char *)*strp;
         size_t len = lenp ? *lenp : (size_t)-1;
 
         while (len > 0 && *str < 128) {
-                if ((void*)ALIGN_TO((unsigned long)str, sizeof(size_t)) == str) {
+                if ((void*)c_align_to((unsigned long)str, sizeof(size_t)) == str) {
                         /*
                          * If the string is aligned to a word boundary, scan two
                          * words at a time for any NULL or non-ASCII characters.
@@ -67,7 +64,7 @@ _public_ void c_utf8_verify_ascii(const char **strp, size_t *lenp) {
                          * Find the actual end of the ASCII-portion of the string.
                          */
                         while (len > 0 && *str < 128) {
-                                if (_unlikely_(*str == 0x00))
+                                if (_c_unlikely_(*str == 0x00))
                                         goto out;
                                 ++str;
                                 --len;
@@ -77,7 +74,7 @@ _public_ void c_utf8_verify_ascii(const char **strp, size_t *lenp) {
                          * The string was not aligned, scan one character at a time until
                          * it is.
                          */
-                        if (_unlikely_(*str == 0x00))
+                        if (_c_unlikely_(*str == 0x00))
                                 goto out;
                         ++str;
                         --len;
@@ -106,7 +103,7 @@ out:
  * If @lenp is NULL the string is scanned until the first invalid
  * byte, without any upper bound on its length.
  */
-_public_ void c_utf8_verify(const char **strp, size_t *lenp) {
+_c_public_ void c_utf8_verify(const char **strp, size_t *lenp) {
         unsigned char *str = (unsigned char *)*strp;
         size_t len = lenp ? *lenp : (size_t)-1;
 
@@ -124,9 +121,9 @@ _public_ void c_utf8_verify(const char **strp, size_t *lenp) {
 
                         break;
                 case 0xC2 ... 0xDF:
-                        if (_unlikely_(len < 2))
+                        if (_c_unlikely_(len < 2))
                                 goto out;
-                        if (_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 1))))
+                        if (_c_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 1))))
                                 goto out;
 
                         str += 2;
@@ -134,11 +131,11 @@ _public_ void c_utf8_verify(const char **strp, size_t *lenp) {
 
                         break;
                 case 0xE0:
-                        if (_unlikely_(len < 3))
+                        if (_c_unlikely_(len < 3))
                                 goto out;
-                        if (_unlikely_(*(str + 1) < 0xA0 || *(str + 1) > 0xBF))
+                        if (_c_unlikely_(*(str + 1) < 0xA0 || *(str + 1) > 0xBF))
                                 goto out;
-                        if (_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 2))))
+                        if (_c_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 2))))
                                 goto out;
 
                         str += 3;
@@ -146,11 +143,11 @@ _public_ void c_utf8_verify(const char **strp, size_t *lenp) {
 
                         break;
                 case 0xE1 ... 0xEC:
-                        if (_unlikely_(len < 3))
+                        if (_c_unlikely_(len < 3))
                                 goto out;
-                        if (_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 1))))
+                        if (_c_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 1))))
                                 goto out;
-                        if (_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 2))))
+                        if (_c_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 2))))
                                 goto out;
 
                         str += 3;
@@ -158,11 +155,11 @@ _public_ void c_utf8_verify(const char **strp, size_t *lenp) {
 
                         break;
                 case 0xED:
-                        if (_unlikely_(len < 3))
+                        if (_c_unlikely_(len < 3))
                                 goto out;
-                        if (_unlikely_(*(str + 1) < 0x80 || *(str + 1) > 0x9F))
+                        if (_c_unlikely_(*(str + 1) < 0x80 || *(str + 1) > 0x9F))
                                 goto out;
-                        if (_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 2))))
+                        if (_c_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 2))))
                                 goto out;
 
                         str += 3;
@@ -170,11 +167,11 @@ _public_ void c_utf8_verify(const char **strp, size_t *lenp) {
 
                         break;
                 case 0xEE ... 0xEF:
-                        if (_unlikely_(len < 3))
+                        if (_c_unlikely_(len < 3))
                                 goto out;
-                        if (_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 1))))
+                        if (_c_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 1))))
                                 goto out;
-                        if (_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 2))))
+                        if (_c_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 2))))
                                 goto out;
 
                         str += 3;
@@ -182,13 +179,13 @@ _public_ void c_utf8_verify(const char **strp, size_t *lenp) {
 
                         break;
                 case 0xF0:
-                        if (_unlikely_(len < 4))
+                        if (_c_unlikely_(len < 4))
                                 goto out;
-                        if (_unlikely_(*(str + 1) < 0x90 || *(str + 1) > 0xBF))
+                        if (_c_unlikely_(*(str + 1) < 0x90 || *(str + 1) > 0xBF))
                                 goto out;
-                        if (_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 2))))
+                        if (_c_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 2))))
                                 goto out;
-                        if (_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 3))))
+                        if (_c_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 3))))
                                 goto out;
 
                         str += 4;
@@ -196,13 +193,13 @@ _public_ void c_utf8_verify(const char **strp, size_t *lenp) {
 
                         break;
                 case 0xF1 ... 0xF3:
-                        if (_unlikely_(len < 4))
+                        if (_c_unlikely_(len < 4))
                                 goto out;
-                        if (_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 1))))
+                        if (_c_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 1))))
                                 goto out;
-                        if (_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 2))))
+                        if (_c_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 2))))
                                 goto out;
-                        if (_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 3))))
+                        if (_c_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 3))))
                                 goto out;
 
                         str += 4;
@@ -210,13 +207,13 @@ _public_ void c_utf8_verify(const char **strp, size_t *lenp) {
 
                         break;
                 case 0xF4:
-                        if (_unlikely_(len < 4))
+                        if (_c_unlikely_(len < 4))
                                 goto out;
-                        if (_unlikely_(*(str + 1) < 0x80 || *(str + 1) > 0x8F))
+                        if (_c_unlikely_(*(str + 1) < 0x80 || *(str + 1) > 0x8F))
                                 goto out;
-                        if (_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 2))))
+                        if (_c_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 2))))
                                 goto out;
-                        if (_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 3))))
+                        if (_c_unlikely_(!C_UTF8_CHAR_IS_TAIL(*(str + 3))))
                                 goto out;
 
                         str += 4;

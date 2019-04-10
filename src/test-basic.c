@@ -4,6 +4,7 @@
 
 #undef NDEBUG
 #include <assert.h>
+#include <c-stdaux.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,17 +19,17 @@ static void test_ascii(void) {
                 str[i] = i;
 
         c_utf8_verify_ascii(&p, &len);
-        assert(*p == 0x00);
-        assert(p == str);
-        assert(len == sizeof(str));
+        c_assert(*p == 0x00);
+        c_assert(p == str);
+        c_assert(len == sizeof(str));
 
         ++p;
         --len;
 
         c_utf8_verify_ascii(&p, &len);
-        assert((unsigned char)*p == 0x80);
-        assert(p == str + 0x7F + 1);
-        assert(len == sizeof(str) - 0x7F - 1);
+        c_assert((unsigned char)*p == 0x80);
+        c_assert(p == str + 0x7F + 1);
+        c_assert(len == sizeof(str) - 0x7F - 1);
 
 }
 
@@ -57,9 +58,9 @@ static void test_utf8(void) {
                 size_t len = sizeof(str);
 
                 c_utf8_verify(&p, &len);
-                assert(len == 1);
-                assert(p == str + strlen(str));
-                assert(*p == 0x00);
+                c_assert(len == 1);
+                c_assert(p == str + strlen(str));
+                c_assert(*p == 0x00);
         }
 
         /* verify every 1-byte character */
@@ -70,9 +71,9 @@ static void test_utf8(void) {
 
                 c_utf8_verify(&p, &len);
                 if (str[0] == 0 || (str[0] & 0b10000000) != 0)
-                        assert(p == str && len == sizeof(str));
+                        c_assert(p == str && len == sizeof(str));
                 else
-                        assert(p == str + sizeof(str) && len == 0);
+                        c_assert(p == str + sizeof(str) && len == 0);
         }
 
         /* verify every 2-byte character */
@@ -93,9 +94,9 @@ static void test_utf8(void) {
                 if (((str[0] & 0b11100000) != 0b11000000) ||
                     ((str[1] & 0b11000000) != 0b10000000) ||
                     (n < 0x80)) /* overlong */
-                        assert(p == str && len == sizeof(str));
+                        c_assert(p == str && len == sizeof(str));
                 else
-                        assert(p == str + sizeof(str) && len == 0);
+                        c_assert(p == str + sizeof(str) && len == 0);
         }
 
         /* verify every 0xF'th 3-byte character */
@@ -119,9 +120,9 @@ static void test_utf8(void) {
                     ((str[2] & 0b11000000) != 0b10000000) ||
                     (n < 0x800) || /* overlong */
                     (n >= 0xD800 && n <= 0xDFFF)) /* surrogates */
-                        assert(p == str && len == sizeof(str));
+                        c_assert(p == str && len == sizeof(str));
                 else
-                        assert(p == str + sizeof(str) && len == 0);
+                        c_assert(p == str + sizeof(str) && len == 0);
         }
 
         /* verify every 0xFFF'th 4-byte character */
@@ -147,9 +148,9 @@ static void test_utf8(void) {
                     ((str[3] & 0b11000000) != 0b10000000) ||
                     (n < 0x10000) || /* overlong */
                     (n > 0x10FFFF)) /* out of unicode range */
-                        assert(p == str && len == sizeof(str));
+                        c_assert(p == str && len == sizeof(str));
                 else
-                        assert(p == str + sizeof(str) && len == 0);
+                        c_assert(p == str + sizeof(str) && len == 0);
         }
 }
 

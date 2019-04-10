@@ -4,6 +4,7 @@
 
 #undef NDEBUG
 #include <assert.h>
+#include <c-stdaux.h>
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,7 +18,7 @@ uint64_t test_get_time(void) {
         int r;
 
         r = clock_gettime(CLOCK_THREAD_CPUTIME_ID, &ts);
-        assert(r >= 0);
+        c_assert(r >= 0);
 
         return ts.tv_sec * UINT64_C(1000000000) + ts.tv_nsec;
 }
@@ -29,7 +30,7 @@ static void test_trivial_utf8(const char *string, size_t n_string, size_t n_byte
         ts = test_get_time();
         res = trivial_utf8_is_valid(string);
         fprintf(stderr, "UTF-8 verify string of %zu-byte characters (trivial): %"PRIu64" Mchar/s\n", n_bytes, n_string / n_bytes * 1000 * 1000 * 1000 / 1024 / 1024 / (test_get_time() - ts));
-        assert(res == string);
+        c_assert(res == string);
 }
 
 static void test_utf8(const char *string, size_t n_string, size_t n_bytes) {
@@ -39,7 +40,7 @@ static void test_utf8(const char *string, size_t n_string, size_t n_bytes) {
         ts = test_get_time();
         c_utf8_verify(&string, &len);
         fprintf(stderr, "UTF-8 verify string of %zu-byte characters: %"PRIu64" Mchar/s\n", n_bytes, n_string / n_bytes * 1000 * 1000 * 1000 / 1024 / 1024 / (test_get_time() - ts));
-        assert(len == 1);
+        c_assert(len == 1);
 }
 
 #define TEST_STRING_SIZE (500ULL * 1024ULL * 1024ULL)
@@ -48,7 +49,7 @@ static void test_multibytes(size_t n_bytes) {
         char *string;
 
         string = calloc(1, TEST_STRING_SIZE);
-        assert(string);
+        c_assert(string);
 
         for (size_t i = 0; i < (TEST_STRING_SIZE - 1) / n_bytes; ++i) {
                 switch (n_bytes) {
@@ -83,7 +84,7 @@ static void test_multibytes(size_t n_bytes) {
                         break;
                 }
                 default:
-                        assert(0);
+                        c_assert(0);
                 }
         }
 

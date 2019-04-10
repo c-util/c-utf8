@@ -42,16 +42,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include <c-stdaux.h>
 #include <errno.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <uchar.h>
-
-#include <stdio.h>
-
 #include "trivial-utf8.h"
 
 /* count of characters used to encode one unicode char */
