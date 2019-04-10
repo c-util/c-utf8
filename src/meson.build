@@ -4,6 +4,10 @@
 
 libcutf8_symfile = join_paths(meson.current_source_dir(), 'libcutf8.sym')
 
+libcutf8_deps = [
+        dep_cstdaux,
+]
+
 libcutf8_private = static_library(
         'cutf8-private',
         [
@@ -13,12 +17,14 @@ libcutf8_private = static_library(
                 '-fvisibility=hidden',
                 '-fno-common',
         ],
+        dependencies: libcutf8_deps,
         pic: true,
 )
 
 libcutf8_shared = shared_library(
         'cutf8',
         objects: libcutf8_private.extract_all_objects(),
+        dependencies: libcutf8_deps,
         install: not meson.is_subproject(),
         soversion: 0,
         link_depends: libcutf8_symfile,
@@ -31,6 +37,7 @@ libcutf8_shared = shared_library(
 libcutf8_dep = declare_dependency(
         include_directories: include_directories('.'),
         link_with: libcutf8_private,
+        dependencies: libcutf8_deps,
         version: meson.project_version(),
 )
 
