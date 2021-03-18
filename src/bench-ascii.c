@@ -13,7 +13,7 @@
 #include "c-utf8.h"
 #include "trivial-utf8.h"
 
-uint64_t test_get_time(void) {
+static uint64_t test_get_time(void) {
         struct timespec ts;
         int r;
 
