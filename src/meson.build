@@ -8,8 +8,8 @@ libcutf8_deps = [
         dep_cstdaux,
 ]
 
-libcutf8_private = static_library(
-        'cutf8-private',
+libcutf8_both = both_libraries(
+        'cutf8-'+major,
         [
                 'c-utf8.c',
         ],
@@ -18,26 +18,19 @@ libcutf8_private = static_library(
                 '-fno-common',
         ],
         dependencies: libcutf8_deps,
-        pic: true,
-)
-
-libcutf8_shared = shared_library(
-        'cutf8',
-        objects: libcutf8_private.extract_all_objects(),
-        dependencies: libcutf8_deps,
         install: not meson.is_subproject(),
-        soversion: 0,
-        link_depends: libcutf8_symfile,
         link_args: [
                 '-Wl,--no-undefined',
                 '-Wl,--version-script=@0@'.format(libcutf8_symfile),
         ],
+        link_depends: libcutf8_symfile,
+        soversion: 0,
 )
 
 libcutf8_dep = declare_dependency(
-        include_directories: include_directories('.'),
-        link_with: libcutf8_private,
         dependencies: libcutf8_deps,
+        include_directories: include_directories('.'),
+        link_with: libcutf8_both.get_static_lib(),
         version: meson.project_version(),
 )
 
@@ -45,11 +38,11 @@ if not meson.is_subproject()
         install_headers('c-utf8.h')
 
         mod_pkgconfig.generate(
-                libraries: libcutf8_shared,
-                version: meson.project_version(),
-                name: 'libcutf8',
-                filebase: 'libcutf8',
                 description: project_description,
+                filebase: 'libcutf8-'+major,
+                libraries: libcutf8_both.get_shared_lib(),
+                name: 'libcutf8',
+                version: meson.project_version(),
         )
 endif
 
@@ -57,7 +50,7 @@ endif
 # target: test-*
 #
 
-test_api = executable('test-api', ['test-api.c'], link_with: libcutf8_shared)
+test_api = executable('test-api', ['test-api.c'], link_with: libcutf8_both.get_shared_lib())
 test('API Symbol Visibility', test_api)
 
 test_basic = executable('test-basic', ['test-basic.c'], dependencies: libcutf8_dep)
