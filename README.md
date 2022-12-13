@@ -1,10 +1,10 @@
 c-utf8
 ======
 
-UTF-8 Handling in Standard ISO-C11
+UTF-8 Handling in standard ISO C11
 
 The c-utf8 project implements utility functions around handling UTF-8 in
-Standard ISO-C11. For API documentation, see the c-utf8.h header file, as well
+standard ISO C11. For API documentation, see the c-utf8.h header file, as well
 as the docbook comments for each function.
 
 ### Project
@@ -16,7 +16,7 @@ as the docbook comments for each function.
 
 The requirements for this project are:
 
- * `libc` (e.g., `glibc >= 2.16`)
+ * `libc` (e.g. `glibc >= 2.16`)
 
 At build-time, the following software is required:
 
@@ -25,8 +25,8 @@ At build-time, the following software is required:
 
 ### Build
 
-The meson build-system is used for this project. Contact upstream
-documentation for detailed help. In most situations the following
+The meson build system is used for this project. Contact upstream
+documentation for detailed help. In most situations, the following
 commands are sufficient to build and install from source:
 
 ```sh
