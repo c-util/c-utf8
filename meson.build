@@ -13,7 +13,7 @@ project_description = 'UTF-8 Handling in Standard ISO-C11'
 
 mod_pkgconfig = import('pkgconfig')
 
-dep_cstdaux = dependency('libcstdaux-1', version: '>=1.4.0')
+dep_cstdaux = dependency('libcstdaux-1', version: '>=1.5.0')
 add_project_arguments(dep_cstdaux.get_variable('cflags').split(' '), language: 'c')
 
 subdir('src')
