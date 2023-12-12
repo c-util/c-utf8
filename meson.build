@@ -6,7 +6,7 @@ project(
         ],
         license: 'Apache',
         meson_version: '>=0.60.0',
-        version: '1.0.0',
+        version: '1.1.0',
 )
 major = meson.project_version().split('.')[0]
 project_description = 'UTF-8 Handling in Standard ISO-C11'
