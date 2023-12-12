@@ -31,9 +31,10 @@ AUTHORS-LGPL:
 
 COPYRIGHT: (ordered alphabetically)
         Copyright (C) 2015-2022 Red Hat, Inc.
+        Copyright (C) 2022-2023 David Rheinsberg
 
 AUTHORS: (ordered alphabetically)
-        David Rheinsberg <david.rheinsberg@gmail.com>
+        David Rheinsberg <david@readahead.eu>
         Evgeny Vereshchagin <evvers@ya.ru>
         Jan Engelhardt <jengelh@inai.de>
         Tom Gundersen <teg@jklm.no>
